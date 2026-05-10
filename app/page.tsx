@@ -1,165 +1,180 @@
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-import dynamic from 'next/dynamic';
-import Navigation from '@/components/Navigation';
-import RaiyasSection from '@/components/sections/RaiyasSection';
-import SeenaSection from '@/components/sections/SeenaSection';
-import ArtStudioSection from '@/components/sections/ArtStudioSection';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
-// Custom cursor — client only
-const Cursor = dynamic(() => import('@/components/Cursor'), { ssr: false });
+const columns = [
+  {
+    id: 'raiyas',
+    title: 'Raiyas',
+    subtitle: 'The Coffee Hub',
+    image: '/images/raiyas-interior.jpg',
+    logo: '/images/logo/logo1.jpeg',
+    color: 'bg-raiyasBurgundy',
+    href: '/raiyas'
+  },
+  {
+    id: 'pilates',
+    title: 'Pilates',
+    subtitle: 'Reformer Studio',
+    image: '/images/seena-reformer.jpg',
+    logo: '/images/logo/logo2.jpeg',
+    color: 'bg-pilatesSand',
+    href: '/pilates'
+  },
+  {
+    id: 'art',
+    title: 'Art Studio',
+    subtitle: 'Creative Space',
+    image: '/images/canvas-art.jpg',
+    logo: '/images/logo/logo3.jpeg',
+    color: 'bg-artTerracotta',
+    href: '/art'
+  }
+];
 
 export default function Home() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // ── Lenis smooth scroll ─────────────────────────────────
-    const lenis = new Lenis({
-      duration: 1.35,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
-
-    // Sync Lenis → ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-
-    // ── ScrollTrigger context ───────────────────────────────
-    const ctx = gsap.context(() => {
-      const vh = window.innerHeight;
-
-      // ── SEENA SECTION REVEAL ────────────────────────────────
-      // Circular/Arch expansion from the bottom center
-      gsap.fromTo('#seena',
-        { clipPath: 'circle(0% at 50% 100%)' },
-        {
-          clipPath: 'circle(150% at 50% 100%)',
-          ease: 'none', // scrub handles the feel
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: `${vh * 0.9}px top`,
-            end:   `${vh * 1.7}px top`,
-            scrub: 1.2,
-          },
-        }
-      );
-
-      // ── CANVAS SECTION REVEAL ───────────────────────────────
-      // Organic expansion from top-right
-      gsap.fromTo('#canvas',
-        { clipPath: 'circle(0% at 100% 0%)' },
-        {
-          clipPath: 'circle(150% at 100% 0%)',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: wrapperRef.current,
-            start: `${vh * 2.3}px top`,
-            end:   `${vh * 3.1}px top`,
-            scrub: 1.2,
-          },
-        }
-      );
-
-      // ── RAIYAS PARALLAX (text drifts up as Seena comes in) ──
-      gsap.to('.raiyas-parallax', {
-        yPercent: -25,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: '0 top',
-          end:   `${vh * 1.75}px top`,
-          scrub: 2,
-        },
-      });
-
-      // ── SEENA PARALLAX (text drifts as Canvas comes in) ─────
-      gsap.to('#seena .relative.z-10', {
-        yPercent: -15,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: `${vh * 1.75}px top`,
-          end:   `${vh * 3.25}px top`,
-          scrub: 2,
-        },
-      });
-
-      // ── SUBTLE SCALE on outgoing sections (depth feel) ──────
-      gsap.to('#raiyas', {
-        scale: 0.96,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: `${vh * 0.9}px top`,
-          end:   `${vh * 1.75}px top`,
-          scrub: 1.5,
-        },
-      });
-
-      gsap.to('#seena', {
-        scale: 0.96,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: wrapperRef.current,
-          start: `${vh * 2.4}px top`,
-          end:   `${vh * 3.25}px top`,
-          scrub: 1.5,
-        },
-      });
-
-    }, wrapperRef);
-
-    return () => {
-      ctx.revert();
-      lenis.destroy();
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
-    };
-  }, []);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const { theme } = useTheme();
 
   return (
-    <>
-      <Navigation />
+    <main className="h-[100dvh] w-full bg-[var(--bg-primary)] overflow-hidden flex flex-col relative text-[var(--text-primary)] font-sans transition-colors duration-700">
 
-      {/*
-        ── Scroll wrapper: provides the total scrollable height.
-           400vh = breathing room for 3 sections + 2 transitions.
-        ─────────────────────────────────────────────────────────
-        Structure:
-          [0 → 100vh]   Raiyas is pinned and visible
-          [100 → 175vh] Seena slides up to cover Raiyas
-          [175 → 250vh] Seena is fully visible, user reads it
-          [250 → 325vh] Canvas slides up to cover Seena
-          [325 → 400vh] Canvas is fully visible, user reads it
-      */}
-      <div
-        id="scroll-wrapper"
-        ref={wrapperRef}
-        style={{ height: '480vh', position: 'relative' }}
-      >
-        {/*
-          Sticky container: stays pinned to the top of the viewport
-          while the wrapper scrolls behind it. All three sections
-          live inside here as absolutely-positioned full-height panels.
-        */}
-        <div style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          overflow: 'hidden',
-        }}>
-          <RaiyasSection />
-          <SeenaSection  />
-          <ArtStudioSection />
+      {/* Optimized Header: Better spacing & Fluidity */}
+      <header className="absolute top-0 w-full z-50 px-6 md:px-12 py-8 md:py-12 flex flex-col md:flex-row justify-between items-center pointer-events-none gap-6 md:gap-0">
+        <div className="font-display italic text-3xl md:text-5xl lg:text-6xl tracking-widest uppercase text-[var(--text-primary)] px-2">
+          455 Haus
         </div>
-      </div>
+        
+        <div className="flex items-center gap-6 md:gap-12 pointer-events-auto">
+          <nav className="flex gap-6 md:gap-12 uppercase tracking-[0.3em] md:tracking-[0.5em] text-[10px] md:text-xs font-bold text-[var(--text-primary)]">
+            <Link href="/raiyas" className="hover:opacity-50 transition-all">Raiyas</Link>
+            <Link href="/pilates" className="hover:opacity-50 transition-all">Pilates</Link>
+            <Link href="/art" className="hover:opacity-50 transition-all">Art</Link>
+          </nav>
+          <ThemeToggle />
+        </div>
+      </header>
 
-      <Cursor />
-    </>
+      {/* The Architectural Grid: Optimized for all screens */}
+      <div className="flex-1 flex flex-col lg:flex-row w-full h-full pt-[160px] lg:pt-0">
+        {columns.map((col, index) => {
+          const isHovered = hoveredId === col.id;
+          const isOtherHovered = hoveredId !== null && hoveredId !== col.id;
+
+          return (
+            <motion.div
+              key={col.id}
+              className={`relative flex-1 border-b lg:border-b-0 lg:border-r border-[var(--border-color)] overflow-hidden cursor-pointer transition-all duration-[1200ms] ease-[0.16,1,0.3,1] ${isOtherHovered ? 'lg:flex-[0.7]' : isHovered ? 'lg:flex-[1.6]' : 'lg:flex-1'}`}
+              onMouseEnter={() => setHoveredId(col.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              style={{ willChange: 'flex' }}
+            >
+              <Link href={col.href} className="absolute inset-0 z-30" />
+
+              {/* Background Image: Fluid scaling */}
+              <div className="absolute inset-0 z-0 origin-center overflow-hidden">
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{
+                    scale: isHovered ? 1.05 : 1.15,
+                    opacity: isHovered ? (theme === 'dark' ? 1 : 0.8) : (theme === 'dark' ? 0.4 : 0.2),
+                    filter: theme === 'light' ? 'grayscale(0.5) contrast(0.8)' : 'grayscale(0) contrast(1.1)'
+                  }}
+                  transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ willChange: 'transform, opacity, filter' }}
+                >
+                  <Image src={col.image} alt={col.title} fill className="object-cover" priority sizes="(max-width: 1024px) 100vw, 33vw" />
+                  <div className="absolute inset-0 bg-[var(--bg-primary)] opacity-40 mix-blend-multiply transition-colors duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent transition-colors duration-700" />
+                </motion.div>
+              </div>
+
+              {/* Color Bloom: Optimized opacity */}
+              <motion.div
+                className={`absolute inset-0 z-10 ${col.color} mix-blend-color`}
+                animate={{ opacity: isHovered ? (theme === 'dark' ? 0.6 : 0.2) : 0 }}
+                transition={{ duration: 1 }}
+                style={{ willChange: 'opacity' }}
+              />
+
+              {/* Content Grid: Refined padding & hierarchy */}
+              <div className={`absolute inset-0 z-20 flex flex-col justify-between p-8 md:p-12 lg:p-16 text-[var(--text-primary)] ${index === 0 ? 'lg:pt-48' : 'pt-6 lg:pt-48'}`}>
+
+                {/* Top Details */}
+                <div className="flex justify-between items-start h-16 md:h-20">
+                  <span className="text-[10px] md:text-xs tracking-[0.8em] opacity-40 uppercase font-bold">0{index + 1}</span>
+                  <AnimatePresence>
+                    {isHovered && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full overflow-hidden border border-[var(--border-color)] p-2 bg-[var(--bg-primary)] transition-colors duration-700 shadow-2xl"
+                      >
+                        <div className="relative w-full h-full rounded-full overflow-hidden">
+                           <Image src={col.logo} alt={`${col.title} Logo`} fill className="object-cover grayscale hover:grayscale-0 transition-all duration-700" sizes="120px" />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Main Typography Group: Dramatic Scaling on Hover */}
+                <motion.div 
+                  animate={{ 
+                    scale: isHovered ? 1.2 : isOtherHovered ? 0.85 : 1,
+                    opacity: isHovered ? 1 : isOtherHovered ? 0.4 : 1,
+                    y: isHovered ? -20 : 0
+                  }}
+                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-col gap-3 lg:gap-6 origin-bottom-left"
+                >
+                  <h2 className="font-display italic text-[14vw] md:text-[7vw] lg:text-[4.5vw] xl:text-[5.5rem] tracking-tighter leading-[0.9] max-w-min">
+                    {col.title}.
+                  </h2>
+                  
+                  <div className="flex flex-col gap-2">
+                    <motion.div
+                      animate={{ 
+                        opacity: isHovered ? 0 : isOtherHovered ? 0.2 : 0.6, 
+                        height: isHovered ? 0 : 'auto' 
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <span className="text-[10px] md:text-xs tracking-[0.4em] md:tracking-[0.6em] uppercase font-bold">
+                        {col.subtitle}
+                      </span>
+                    </motion.div>
+
+                    <AnimatePresence mode="wait">
+                      {isHovered && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.4 }}
+                          className={`text-[10px] md:text-xs tracking-[0.6em] uppercase overflow-hidden font-bold`}
+                        >
+                          <span className="inline-block mt-2 border-b border-[var(--text-primary)] pb-2 transition-colors duration-700">
+                            Explore
+                          </span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+    </main>
   );
 }

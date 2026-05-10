@@ -6,12 +6,14 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import TextReveal from '@/components/TextReveal';
 import Atmosphere from '@/components/Atmosphere';
+import LottieAnimation from '@/components/LottieAnimation';
+import Link from 'next/link';
 
-const STATS = [
-  { value: '6',  label: 'Reformers'      },
-  { value: '14', label: 'Classes / Week'  },
-  { value: '45', label: 'Min Sessions'    },
-  { value: '∞',  label: 'Transformations' },
+const SCHEDULE = [
+  { time: '6:00 AM - 6:45 AM', slots: 5 },
+  { time: '7:15 AM - 8:00 AM', slots: 5 },
+  { time: '8:30 AM - 9:15 AM', slots: 5 },
+  { time: '9:30 AM - 10:15 AM', slots: 5 },
 ];
 
 export default function SeenaSection() {
@@ -150,16 +152,16 @@ export default function SeenaSection() {
       {/* ── Botanical SVG top-left ──────────────────────────── */}
       <div className="absolute top-0 left-0 z-0 pointer-events-none" style={{ width: '320px', height: '280px', opacity: 0.18 }}>
         <svg viewBox="0 0 300 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10 250 Q80 160 160 60" stroke="#2D4A2F" strokeWidth="1.5" fill="none"/>
-          <path d="M10 250 Q70 180 120 90" stroke="#2D4A2F" strokeWidth="1" fill="none" opacity="0.6"/>
-          <path d="M160 60 Q130 100 90 110" stroke="#2D4A2F" strokeWidth="1" fill="none"/>
-          <path d="M160 60 Q185 105 155 135" stroke="#2D4A2F" strokeWidth="1" fill="none"/>
-          <path d="M160 60 Q200 80 195 120" stroke="#2D4A2F" strokeWidth="0.8" fill="none"/>
-          <ellipse cx="75" cy="130" rx="28" ry="13" transform="rotate(-50 75 130)" fill="#2D4A2F" opacity="0.25"/>
-          <ellipse cx="110" cy="90" rx="22" ry="10" transform="rotate(-65 110 90)" fill="#2D4A2F" opacity="0.2"/>
-          <ellipse cx="140" cy="110" rx="18" ry="9" transform="rotate(-40 140 110)" fill="#2D4A2F" opacity="0.15"/>
-          <path d="M30 200 Q55 175 50 150" stroke="#2D4A2F" strokeWidth="0.8" fill="none" opacity="0.4"/>
-          <ellipse cx="50" cy="148" rx="14" ry="7" transform="rotate(-55 50 148)" fill="#2D4A2F" opacity="0.15"/>
+          <path d="M10 250 Q80 160 160 60" stroke="#4A0E17" strokeWidth="1.5" fill="none"/>
+          <path d="M10 250 Q70 180 120 90" stroke="#4A0E17" strokeWidth="1" fill="none" opacity="0.6"/>
+          <path d="M160 60 Q130 100 90 110" stroke="#4A0E17" strokeWidth="1" fill="none"/>
+          <path d="M160 60 Q185 105 155 135" stroke="#4A0E17" strokeWidth="1" fill="none"/>
+          <path d="M160 60 Q200 80 195 120" stroke="#4A0E17" strokeWidth="0.8" fill="none"/>
+          <ellipse cx="75" cy="130" rx="28" ry="13" transform="rotate(-50 75 130)" fill="#4A0E17" opacity="0.25"/>
+          <ellipse cx="110" cy="90" rx="22" ry="10" transform="rotate(-65 110 90)" fill="#4A0E17" opacity="0.2"/>
+          <ellipse cx="140" cy="110" rx="18" ry="9" transform="rotate(-40 140 110)" fill="#4A0E17" opacity="0.15"/>
+          <path d="M30 200 Q55 175 50 150" stroke="#4A0E17" strokeWidth="0.8" fill="none" opacity="0.4"/>
+          <ellipse cx="50" cy="148" rx="14" ry="7" transform="rotate(-55 50 148)" fill="#4A0E17" opacity="0.15"/>
         </svg>
       </div>
 
@@ -183,11 +185,16 @@ export default function SeenaSection() {
               width: `${a.w}px`,
               height: a.h,
               borderRadius: `${a.r}px ${a.r}px 0 0`,
-              border: `1.5px solid rgba(196,147,90,${0.2 + i * 0.06})`,
-              background: `rgba(196,147,90,${0.03 + i * 0.015})`,
+              border: `1.5px solid rgba(74,14,23,${0.1 + i * 0.04})`,
+              background: `rgba(74,14,23,${0.02 + i * 0.01})`,
             }}
           />
         ))}
+      </div>
+
+      {/* Lottie Animation in background */}
+      <div className="absolute top-1/2 left-[5%] transform -translate-y-1/2 opacity-30 pointer-events-none mix-blend-multiply z-0">
+        <LottieAnimation animationUrl="https://assets10.lottiefiles.com/packages/lf20_3rwasyjy.json" className="w-[700px] h-[700px]" />
       </div>
 
       {/* ── Brand Images ────────────────────────────────────── */}
@@ -224,39 +231,33 @@ export default function SeenaSection() {
 
           {/* Label */}
           <div ref={labelRef} className="flex items-center gap-4 mb-8" style={{ opacity: 0 }}>
-            <span style={{ display: 'block', width: '40px', height: '1px', background: 'rgba(196,147,90,0.6)' }} />
+            <span style={{ display: 'block', width: '40px', height: '1px', background: 'rgba(74,14,23,0.6)' }} />
             <span style={{
               fontSize: '10px', letterSpacing: '0.4em', textTransform: 'uppercase',
-              color: 'rgba(139,94,60,0.8)', fontWeight: 300,
+              color: 'rgba(74,14,23,0.8)', fontWeight: 300,
             }}>
-              Reformer Pilates Studio
+              Pilates Studio
             </span>
           </div>
 
           {/* Headline */}
           <div ref={headRef} className="seena-header mb-5">
             <TextReveal 
-              text="Seena"
+              text="Pilates"
               className="font-display"
               start="top 90%"
               delay={0.2}
-            />
-            <TextReveal 
-              text="Studios"
-              className="font-display italic-char"
-              start="top 90%"
-              delay={0.3}
             />
             <style jsx global>{`
               .seena-header .char {
                 font-size: clamp(3.8rem, 10vw, 8rem);
                 line-height: 0.9;
                 letter-spacing: -0.025em;
-                color: #2C2016;
+                color: #4A0E17;
                 font-weight: 300;
               }
               .seena-header .italic-char .char {
-                color: #C4935A;
+                color: #4A0E17;
                 font-style: italic;
               }
             `}</style>
@@ -268,7 +269,7 @@ export default function SeenaSection() {
             fontSize: 'clamp(1rem, 1.8vw, 1.4rem)',
             fontStyle: 'italic',
             fontWeight: 300,
-            color: '#8B5E3C',
+            color: '#4A0E17',
             marginBottom: '1.1rem',
             letterSpacing: '0.02em',
           }}>
@@ -281,7 +282,7 @@ export default function SeenaSection() {
             fontSize: '0.8rem',
             letterSpacing: '0.055em',
             lineHeight: 1.9,
-            color: 'rgba(44,32,22,0.6)',
+            color: 'rgba(74,14,23,0.7)',
             maxWidth: '360px',
             fontWeight: 300,
             marginBottom: '2.25rem',
@@ -292,58 +293,47 @@ export default function SeenaSection() {
           </p>
 
           {/* CTAs */}
-          <div ref={ctaRef} style={{ opacity: 0 }} className="flex items-center gap-6">
-            <button
-              style={{
-                padding: '0.75rem 2.25rem',
-                background: '#2C2016',
-                color: '#EDE0C4',
-                fontSize: '10px',
-                letterSpacing: '0.32em',
-                textTransform: 'uppercase',
-                border: 'none',
-                cursor: 'none',
-                transition: 'all 0.4s ease',
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#C4935A';
-                (e.currentTarget as HTMLButtonElement).style.color = '#FAF6F0';
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = '#2C2016';
-                (e.currentTarget as HTMLButtonElement).style.color = '#EDE0C4';
-              }}
-            >
-              Book a Class
-            </button>
-            <button style={{
-              fontSize: '10px', letterSpacing: '0.32em', textTransform: 'uppercase',
-              color: 'rgba(139,94,60,0.6)', background: 'none', border: 'none', cursor: 'none',
-              transition: 'color 0.3s ease',
+          <div ref={ctaRef} style={{ opacity: 0 }} className="flex items-center gap-6 mt-8">
+            <Link href="/pilates" style={{
+              padding: '1rem 3rem',
+              background: '#4A0E17',
+              color: '#EDE0C4',
+              fontSize: '11px',
+              letterSpacing: '0.4em',
+              textTransform: 'uppercase',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.4s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#8B5E3C'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(139,94,60,0.6)'; }}
-            >
-              View Schedule →
-            </button>
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = '#721B2A';
+              (e.currentTarget as HTMLAnchorElement).style.color = '#FAF6F0';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLAnchorElement).style.background = '#4A0E17';
+              (e.currentTarget as HTMLAnchorElement).style.color = '#EDE0C4';
+            }}>
+              Explore Pilates Experience
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* ── Stats column (bottom-right) ──────────────────────── */}
-      <div ref={statsRef} className="absolute right-16 bottom-20 z-10 flex flex-col gap-7">
-        {STATS.map(stat => (
-          <div key={stat.label} className="stat-item text-right" style={{ opacity: 0 }}>
+      {/* ── Schedule column (bottom-right) ──────────────────────── */}
+      <div ref={statsRef} className="absolute right-16 bottom-16 z-10 flex flex-col gap-5">
+        <div style={{ fontSize: '10px', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'rgba(74,14,23,0.6)', marginBottom: '8px', textAlign: 'right' }}>Daily Schedule</div>
+        {SCHEDULE.map(slot => (
+          <div key={slot.time} className="stat-item text-right" style={{ opacity: 0 }}>
             <div className="font-display" style={{
-              fontSize: '3rem', lineHeight: 1, color: '#C4935A', fontWeight: 300,
+              fontSize: '1.8rem', lineHeight: 1, color: '#4A0E17', fontWeight: 300,
             }}>
-              {stat.value}
+              {slot.time}
             </div>
             <div style={{
               fontSize: '9px', letterSpacing: '0.35em', textTransform: 'uppercase',
-              color: 'rgba(139,94,60,0.6)', marginTop: '4px',
+              color: 'rgba(74,14,23,0.6)', marginTop: '4px',
             }}>
-              {stat.label}
+              {slot.slots} SLOTS AVAILABLE
             </div>
           </div>
         ))}
@@ -352,13 +342,13 @@ export default function SeenaSection() {
       {/* ── Divider line ─────────────────────────────────────── */}
       <div className="absolute bottom-0 left-0 right-0 z-10" style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent, rgba(196,147,90,0.3), transparent)',
+        background: 'linear-gradient(to right, transparent, rgba(74,14,23,0.3), transparent)',
       }} />
 
       {/* ── Oak texture strip on left edge ───────────────────── */}
       <div className="absolute top-0 left-0 bottom-0 z-0" style={{
         width: '6px',
-        background: 'linear-gradient(to right, rgba(196,147,90,0.4), transparent)',
+        background: 'linear-gradient(to right, rgba(74,14,23,0.4), transparent)',
       }} />
     </section>
   );

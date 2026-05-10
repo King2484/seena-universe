@@ -1,27 +1,37 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Noise from "@/components/Noise";
-import LoadingScreen from "@/components/LoadingScreen";
+import { ThemeProvider } from "../context/ThemeContext";
+import ThemeTransition from "../components/ThemeTransition";
+import SmoothScroll from "../components/SmoothScroll";
+import CustomCursor from "../components/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "Seena Universe — Coffee · Pilates · Art",
-  description: "Three spaces, one soul. A sanctuary crafted for those who move with intention.",
-  keywords: ["pilates", "coffee shop", "art studio", "seena studios", "raiyas"],
+  title: "455 HAUS | Digital Flagship",
+  description: "A cinematic architectural portal into coffee, pilates, and art.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2C2016",
+  themeColor: "#050505",
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        <LoadingScreen />
-        <Noise />
-        {children}
+      <body className="antialiased selection:bg-[var(--text-primary)] selection:text-[var(--bg-primary)]">
+        <ThemeProvider>
+          <CustomCursor />
+          <ThemeTransition />
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
+        </ThemeProvider>
       </body>
     </html>
   );

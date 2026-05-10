@@ -68,10 +68,9 @@ export default function LoadingScreen() {
           />
         </div>
 
-        <div className="overflow-hidden">
-          <h2 className="font-display text-4xl text-[#F5ECD7] flex gap-3 italic">
-            <span>Seena</span>
-            <span className="text-[#D4AA70]">Universe</span>
+        <div className="overflow-hidden mb-4">
+          <h2 className="font-display text-4xl text-[#F5ECD7] italic tracking-widest">
+            <span>455 HAUS</span>
           </h2>
         </div>
 
@@ -87,17 +86,6 @@ export default function LoadingScreen() {
           </span>
         </div>
       </div>
-
-      <style jsx>{`
-        h2 span {
-          display: inline-block;
-          animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-      `}</style>
     </div>
   );
 }

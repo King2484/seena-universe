@@ -3,8 +3,10 @@
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import Link from 'next/link';
 import gsap from 'gsap';
 import TextReveal from '@/components/TextReveal';
+import LottieAnimation from '@/components/LottieAnimation';
 
 const ParticleHero = dynamic(
   () => import('@/components/three/ParticleHero'),
@@ -93,7 +95,7 @@ export default function RaiyasSection() {
       ref={sectionRef}
       id="raiyas"
       className="panel"
-      style={{ background: 'radial-gradient(ellipse 140% 100% at 50% 120%, #2C1A0E 0%, #1A1210 50%, #0E0B08 100%)', zIndex: 1 }}
+      style={{ background: 'radial-gradient(ellipse 140% 100% at 50% 120%, #4A0E17 0%, #31080E 50%, #1D0407 100%)', zIndex: 1 }}
     >
       <ParticleHero />
 
@@ -127,12 +129,17 @@ export default function RaiyasSection() {
       </div>
 
       <div className="absolute inset-0 z-10" style={{
-        background: 'radial-gradient(ellipse 60% 60% at 50% 50%, transparent 20%, rgba(26,18,16,0.4) 80%)'
+        background: 'radial-gradient(ellipse 60% 60% at 50% 50%, transparent 20%, rgba(29,4,7,0.4) 80%)'
       }} />
       <div className="absolute bottom-0 left-0 right-0 h-1/3 z-10"
-        style={{ background: 'linear-gradient(to top, #1A1210 0%, transparent 100%)' }} />
+        style={{ background: 'linear-gradient(to top, #1D0407 0%, transparent 100%)' }} />
       <div className="absolute top-0 left-0 right-0 h-1/4 z-10"
-        style={{ background: 'linear-gradient(to bottom, #0E0B08 0%, transparent 100%)' }} />
+        style={{ background: 'linear-gradient(to bottom, #1D0407 0%, transparent 100%)' }} />
+
+      {/* Lottie Animation in background */}
+      <div className="absolute top-1/2 right-[10%] transform -translate-y-1/2 opacity-20 pointer-events-none mix-blend-screen z-0">
+        <LottieAnimation animationUrl="https://assets2.lottiefiles.com/packages/lf20_q7uarxsb.json" className="w-[600px] h-[600px]" />
+      </div>
 
       <div className="raiyas-parallax relative z-20 flex flex-col items-center justify-center h-full px-6 text-center">
 
@@ -199,47 +206,28 @@ export default function RaiyasSection() {
         </p>
 
         {/* CTAs */}
-        <div ref={ctaRef} style={{ opacity: 0 }} className="flex items-center gap-8">
-          <button
-            className="group relative overflow-hidden"
-            style={{
-              padding: '0.75rem 2.25rem',
-              border: '1px solid rgba(212,170,112,0.4)',
-              fontSize: '10px',
-              letterSpacing: '0.32em',
-              textTransform: 'uppercase',
-              color: '#D4AA70',
-              background: 'transparent',
-              cursor: 'none',
-              transition: 'all 0.5s ease',
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(212,170,112,0.12)';
-              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(212,170,112,0.8)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
-              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(212,170,112,0.4)';
-            }}
-          >
-            Reserve a Table
-          </button>
-
-          <button style={{
-            fontSize: '10px',
-            letterSpacing: '0.32em',
+        <div ref={ctaRef} style={{ opacity: 0 }} className="flex items-center gap-6 mt-8">
+          <Link href="/raiyas" className="group relative overflow-hidden" style={{
+            padding: '1rem 3rem',
+            border: '1px solid rgba(245,236,215,0.4)',
+            fontSize: '11px',
+            letterSpacing: '0.4em',
             textTransform: 'uppercase',
-            color: 'rgba(245,236,215,0.4)',
-            background: 'none',
-            border: 'none',
-            cursor: 'none',
-            transition: 'color 0.3s ease',
+            color: '#F5ECD7',
+            background: 'transparent',
+            cursor: 'pointer',
+            transition: 'all 0.5s ease',
           }}
-          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(245,236,215,0.8)'; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(245,236,215,0.4)'; }}
-          >
-            Explore Menu →
-          </button>
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(245,236,215,0.12)';
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,236,215,0.8)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLAnchorElement).style.background = 'transparent';
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(245,236,215,0.4)';
+          }}>
+            Explore Raiyas Experience
+          </Link>
         </div>
       </div>
 

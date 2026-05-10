@@ -5,12 +5,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const SECTIONS = ['raiyas', 'seena', 'canvas'] as const;
-const LABELS   = ['Raiyas', 'Seena', 'Canvas'] as const;
+const LABELS   = ['Raiyas', 'Pilates', 'Art Studio'] as const;
 
 const NAV_THEMES = [
-  { text: 'rgba(245,236,215,0.85)', dot: '#D4AA70', dotDim: 'rgba(245,236,215,0.15)' },
-  { text: 'rgba(44,32,22,0.85)',     dot: '#C4935A', dotDim: 'rgba(44,32,22,0.15)'    },
-  { text: 'rgba(245,236,215,0.85)', dot: '#D4AA70', dotDim: 'rgba(245,236,215,0.15)' },
+  { text: 'rgba(245,236,215,0.85)', dot: '#D4AA70', dotDim: 'rgba(245,236,215,0.15)' }, // Raiyas (Burgundy BG) -> Cream Text
+  { text: '#4A0E17',                 dot: '#4A0E17', dotDim: 'rgba(74,14,23,0.15)'   }, // Pilates (Cream BG) -> Burgundy Text
+  { text: '#E86A33',                 dot: '#E86A33', dotDim: 'rgba(232,106,51,0.15)' }, // Art Studio (Cream BG) -> Orange Text
 ];
 
 export default function Navigation() {
@@ -30,9 +30,9 @@ export default function Navigation() {
     
     const vh = window.innerHeight;
     const targetMap: Record<string, number> = {
-      'raiyas': 0,
-      'seena': vh * 1.7,
-      'canvas': vh * 3.1,
+      'raiyas': vh * 1.7,
+      'seena': vh * 3.2,
+      'canvas': vh * 4.7,
     };
     
     window.scrollTo({ top: targetMap[id], behavior: 'smooth' });
@@ -53,8 +53,8 @@ export default function Navigation() {
 
       const vh = window.innerHeight;
       let newActive = 0;
-      if      (scrollTop < vh * 1.2)  newActive = 0;
-      else if (scrollTop < vh * 2.5)  newActive = 1;
+      if      (scrollTop < vh * 2.5)  newActive = 0;
+      else if (scrollTop < vh * 4.0)  newActive = 1;
       else                           newActive = 2;
       
       if (newActive !== active) {
@@ -100,7 +100,7 @@ export default function Navigation() {
           className="font-display cursor-none select-none text-xl"
           style={{
             letterSpacing: '0.25em',
-            fontWeight: 300,
+            fontWeight: 400,
             color: isOpen ? '#FAF6F0' : theme.text,
             transition: 'color 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
             zIndex: 1001,
@@ -110,7 +110,7 @@ export default function Navigation() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         >
-          Seena
+          455 HAUS
         </div>
 
         {/* ── Dot navigation ────────────────────────────────── */}
